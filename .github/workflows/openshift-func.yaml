@@ -21,6 +21,17 @@ jobs:
           # Installs the latest release of the Knative CLI (kn), used for functions/serverless
           kn: "latest"
           
+      # Install func (Knative Functions CLI)
+      - name: Install func CLI
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y unzip curl jq
+          VER=$(curl -s https://api.github.com/repos/knative/func/releases/latest | jq -r .tag_name)
+          curl -L -o func.zip "https://github.com/knative/func/releases/download/${VER}/func_linux_amd64.zip"
+          unzip func.zip
+          sudo mv func /usr/local/bin/func
+          func version
+          
       # Log in to OpenShift
       - name: oc login
         run: |
