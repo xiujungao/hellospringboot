@@ -12,7 +12,7 @@ build:
   - name: BP_JVM_VERSION
     value: "21"
   - name: BP_MAVEN_ACTIVE_PROFILES
-    value: dev
+    value: native
 deploy:
   healthEndpoints:
     liveness: /actuator/health
