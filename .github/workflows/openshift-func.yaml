@@ -14,7 +14,7 @@ jobs:
       REGISTRY_USER: ${{ secrets.DOCKER_HUB_USERNAME }}
       IMAGE_NAME: hellospringboot
       TAG: ${{ github.sha }}
-      IMAGE_FULL: ${{ env.REGISTRY_USER }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+      IMAGE_FULL: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
     
     steps:
       - name: Checkout
