@@ -9,6 +9,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      REGISTRY_HOST: docker.io
+      REGISTRY_USER: ${{ secrets.DOCKER_HUB_USERNAME }}
+      IMAGE_NAME: hellospringboot
+      TAG: ${{ github.sha }}
+      IMAGE_FULL: ${{ env.REGISTRY_USER }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -51,10 +58,10 @@ jobs:
       - name: func deploy
         # If your function is not at repo root, set working-directory: ./hellojava (etc.)
         run: |
-          # Hint: you can pin the image explicitly via --image "${{ secrets.REGISTRY_USERNAME }}/hellofunc"
           func deploy \
             --namespace "${{ secrets.OPENSHIFT_PROJECT_NAME }}" \
             --registry "${{ secrets.REGISTRY_USERNAME }}" \
+            --image "${{ env.IMAGE_FULL }}" \
             --confirm --verbose
 
       # Show the public URL
