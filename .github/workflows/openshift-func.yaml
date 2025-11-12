@@ -1,0 +1,52 @@
+name: Deploy Knative Function to OpenShift
+
+on:
+  push:
+    branches: ["master"]   # change if needed
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install OpenShift and Knative CLI tools
+        uses: redhat-actions/openshift-tools-installer@v1
+        with:
+          # Installs the latest release of the OpenShift CLI (oc)
+          oc: "latest"
+          # Installs the latest release of the Knative CLI (kn), used for functions/serverless
+          kn: "latest"
+          
+      # Log in to OpenShift
+      - name: oc login
+        run: |
+          oc login "${{ secrets.OPENSHIFT_SERVER }}" \
+            --token="${{ secrets.OPENSHIFT_TOKEN }}" \
+            --insecure-skip-tls-verify=true
+          oc project "${{ secrets.OPENSHIFT_PROJECT_NAME }}"
+
+      # log into docker hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      # Build & Deploy with func (buildpacks via Docker under the hood)
+      - name: func deploy
+        # If your function is not at repo root, set working-directory: ./hellojava (etc.)
+        run: |
+          # Hint: you can pin the image explicitly via --image "${{ secrets.REGISTRY_USERNAME }}/hellofunc"
+          func deploy \
+            --namespace "${{ secrets.OPENSHIFT_PROJECT_NAME }}" \
+            --registry "${{ secrets.REGISTRY_USERNAME }}" \
+            --confirm --verbose
+
+      # Show the public URL
+      - name: Show Knative Service URL
+        run: |
+          oc get ksvc -n "${{ secrets.OPENSHIFT_PROJECT_NAME }}"
