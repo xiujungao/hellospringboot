@@ -1,0 +1,43 @@
+# .github/workflows/promote.yml
+name: Promote to TEST/PROD
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Target environment
+        options: [test, prod]
+      image_tag:
+        description: Image tag to promote (e.g., a commit SHA)
+        required: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_FULL: ${{ secrets.DOCKER_HUB_USERNAME }}/hellospringboot:${{ github.event.inputs.image_tag }}
+      NAMESPACE: ${{ secrets.OPENSHIFT_PROJECT_NAME }}
+    steps:
+      - uses: redhat-actions/openshift-tools-installer@v1
+        with: { oc: latest, kn: latest }
+
+      # Log in to OpenShift
+      - name: oc login
+        run: |
+          oc login "${{ secrets.OPENSHIFT_SERVER }}" \
+            --token="${{ secrets.OPENSHIFT_TOKEN }}" \
+            --insecure-skip-tls-verify=true
+          oc project "${{ secrets.OPENSHIFT_PROJECT_NAME }}"
+
+      # Repoint the Knative Service to the existing image tag (no build)
+      - name: Update service to promoted image
+        run: |
+          kn service update hellospringboot \
+            --image "${{ env.IMAGE_FULL }}" \
+            -n "${{ env.NAMESPACE }}"
+
+      # Set the Spring runtime profile for that environment
+      - name: Set Spring profile
+        run: |
+          PROFILE="${{ env.NAMESPACE }}"   # test -> test, prod -> prod
+          oc set env ksvc/hellospringboot SPRING_PROFILES_ACTIVE="$PROFILE" -n "${{ secrets.OPENSHIFT_PROJECT_NAME }}"
