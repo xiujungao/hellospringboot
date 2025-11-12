@@ -13,8 +13,7 @@ jobs:
       REGISTRY_HOST: docker.io
       REGISTRY_USER: ${{ secrets.DOCKER_HUB_USERNAME }}
       IMAGE_NAME: hellospringboot
-      TAG: ${{ github.sha }}
-      IMAGE_FULL: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+      IMAGE_FULL: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
     
     steps:
       - name: Checkout
