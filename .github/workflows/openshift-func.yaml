@@ -22,17 +22,13 @@ jobs:
           kn: "latest"
           
       # Install func (Knative Functions CLI)
-      - name: Install func CLI
+      - name: Install func CLI (plain binary)
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y curl tar jq
-          # Get the latest release tag
-          VER=$(curl -s https://api.github.com/repos/knative/func/releases/latest | jq -r .tag_name)
-          echo "Installing func ${VER}"
-          # Download the Linux tar.gz binary
-          curl -L -o func.tar.gz "https://github.com/knative/func/releases/download/${VER}/func_linux_amd64.tar.gz"
-          # Extract and move to PATH
-          tar -xzf func.tar.gz
+          sudo apt-get install -y curl
+          echo "Downloading Knative func binary..."
+          curl -L -o func https://github.com/knative/func/releases/download/knative-v1.20.0/func_linux_amd64
+          chmod +x func
           sudo mv func /usr/local/bin/func
           func version
           
