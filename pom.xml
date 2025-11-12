@@ -24,14 +24,6 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
   
-  <profiles>
-    <profile>
-      <id>dev</id>
-      <properties>
-        <spring.profiles.active>dev</spring.profiles.active>
-      </properties>
-    </profile>
-  </profiles>
   <dependencyManagement>
     <dependencies>
       <dependency>
