@@ -1,0 +1,18 @@
+# $schema: https://raw.githubusercontent.com/knative/func/c9d4c54d/schema/func_yaml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/knative/func/c9d4c54d/schema/func_yaml-schema.json
+specVersion: 0.36.0
+name: hellospringboot
+runtime: springboot
+created: 2025-11-11T17:23:19.5820977-05:00
+build:
+  buildEnvs:
+  - name: BP_NATIVE_IMAGE
+    value: "false"
+  - name: BP_JVM_VERSION
+    value: "21"
+  - name: BP_MAVEN_ACTIVE_PROFILES
+    value: native
+deploy:
+  healthEndpoints:
+    liveness: /actuator/health
+    readiness: /actuator/health
