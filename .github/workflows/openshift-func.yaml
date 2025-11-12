@@ -50,6 +50,10 @@ jobs:
             --image "${{ env.IMAGE_FULL }}" \
             --confirm --verbose
 
+      - name: Set DEV Spring profile
+        run: |
+          oc set env ksvc/hellospringboot SPRING_PROFILES_ACTIVE=dev -n dev
+
       # Show the public URL
       - name: Show Knative Service URL
         run: |
