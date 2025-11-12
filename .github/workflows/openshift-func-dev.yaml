@@ -52,7 +52,7 @@ jobs:
 
       - name: Set DEV Spring profile
         run: |
-          oc set env ksvc/hellospringboot SPRING_PROFILES_ACTIVE=dev -n "${{ secrets.OPENSHIFT_PROJECT_NAME }}" 
+          kn service update hellospringboot --env SPRING_PROFILES_ACTIVE=dev -n "${{ secrets.OPENSHIFT_PROJECT_NAME }}" 
 
       # Show the public URL
       - name: Show Knative Service URL
