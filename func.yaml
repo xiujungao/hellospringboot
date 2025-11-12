@@ -17,3 +17,8 @@ deploy:
   healthEndpoints:
     liveness: /actuator/health
     readiness: /actuator/health
+
+run:
+  envs:
+    - name: SPRING_PROFILES_ACTIVE
+      value: dev
