@@ -58,7 +58,6 @@ jobs:
         run: |
           func deploy \
             --namespace "${{ secrets.OPENSHIFT_PROJECT_NAME }}" \
-            --registry "${{ secrets.REGISTRY_USERNAME }}" \
             --image "${{ env.IMAGE_FULL }}" \
             --confirm --verbose
 
