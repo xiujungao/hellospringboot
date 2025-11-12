@@ -6,6 +6,7 @@ runtime: springboot
 created: 2025-11-11T17:23:19.5820977-05:00
 build:
   builder: s2i
+  image: quay.io/redhat-developer/faas-java-builder:latest
   buildEnvs:
   - name: BP_NATIVE_IMAGE
     value: "false"
