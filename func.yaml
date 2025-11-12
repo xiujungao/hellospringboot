@@ -5,6 +5,7 @@ name: hellospringboot
 runtime: springboot
 created: 2025-11-11T17:23:19.5820977-05:00
 build:
+  builder: gcr.io/paketo-buildpacks/builder-jammy-base
   buildEnvs:
   - name: BP_NATIVE_IMAGE
     value: "false"
