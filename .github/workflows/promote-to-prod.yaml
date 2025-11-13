@@ -39,5 +39,4 @@ jobs:
       # Set the Spring runtime profile for that environment
       - name: Set Spring profile
         run: |
-          PROFILE="${{ env.NAMESPACE }}"   # test -> test, prod -> prod
-          kn service update hellospringboot --env SPRING_PROFILES_ACTIVE="$PROFILE" -n "${{ secrets.OPENSHIFT_PROJECT_NAME }}"
+          kn service update hellospringboot --env SPRING_PROFILES_ACTIVE="${{ env.NAMESPACE }}" -n "${{ secrets.OPENSHIFT_PROJECT_NAME }}"
