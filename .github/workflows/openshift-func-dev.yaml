@@ -41,10 +41,12 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           
-      # apply pingsource-echo.yaml
-      - name: apply pingsource-echo.yaml
+      # apply broker trigger
+      - name: apply pingsource.yaml
         run: |
-          oc apply -f ./openshift/pingsource-echo.yaml
+          oc apply -f ./openshift/broker.yaml
+          oc apply -f ./openshift/pingsource.yaml
+          oc apply -f ./openshift/trigger.yaml
 
       # Build & Deploy with func (buildpacks via Docker under the hood)
       - name: func deploy
