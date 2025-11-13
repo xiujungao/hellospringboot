@@ -1,0 +1,16 @@
+apiVersion: sources.knative.dev/v1
+kind: PingSource
+metadata:
+  name: echo-ping
+  namespace: xiujun-dev
+spec:
+  # cron-style schedule: every 30 seconds
+  schedule: "*/30 * * * * *"
+  # data to send (JSON)
+  data: '{"message":"Hello from PingSource"}'
+  # where to send the event
+  sink:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: hellospringboot

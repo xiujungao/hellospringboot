@@ -1,5 +1,7 @@
 package functions;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +11,8 @@ import java.util.function.Function;
 
 @SpringBootApplication
 public class CloudFunctionApplication {
+
+  private static final Logger log = LoggerFactory.getLogger(CloudFunctionApplication.class);
 
   public static void main(String[] args) {
     SpringApplication.run(CloudFunctionApplication.class, args);
@@ -30,7 +34,11 @@ public class CloudFunctionApplication {
         stringBuilder.append("echo: ").append(payload);
       }
 
-      return stringBuilder.toString();
+      var response = stringBuilder.toString();
+      
+      log.info(response);
+      
+      return response;
     };
   }
 }
