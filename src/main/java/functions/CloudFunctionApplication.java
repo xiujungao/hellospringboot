@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.Message;
 
+import java.time.LocalDateTime;
 import java.util.function.Function;
 
 @SpringBootApplication
@@ -40,5 +41,10 @@ public class CloudFunctionApplication {
       
       return response;
     };
+  }
+
+  @Bean
+  public Function<String, String> echoTime() {
+    return payload -> LocalDateTime.now() + ":" + payload;
   }
 }

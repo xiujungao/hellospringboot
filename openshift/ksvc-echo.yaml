@@ -1,0 +1,14 @@
+# ksvc-echo.yaml
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: hellospringboot-echo
+  namespace: xiujun-dev
+spec:
+  template:
+    spec:
+      containers:
+        - image: __IMAGE__
+          env:
+            - name: SPRING_CLOUD_FUNCTION_DEFINITION
+              value: echo

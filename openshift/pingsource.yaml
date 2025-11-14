@@ -5,7 +5,7 @@ metadata:
   namespace: xiujun-dev
 spec:
   # cron-style schedule: every 1 hour
-  schedule: "0 * * * *"
+  schedule: "* * * * *"
   # data to send (JSON)
   data: '{"message":"Hello from PingSource"}'
   # where to send the event

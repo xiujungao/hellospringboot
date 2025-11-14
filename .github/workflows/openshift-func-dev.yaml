@@ -41,25 +41,34 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           
+      # Build & Deploy with func (buildpacks via Docker under the hood)
+      - name: func build
+        # If your function is not at repo root, set working-directory: ./hellojava (etc.)
+        run: |
+          kn func build \
+            --namespace "${{ secrets.OPENSHIFT_PROJECT_NAME }}" \
+            --image "${{ env.IMAGE_FULL }}" \
+            --confirm --verbose
+
+      # Apply KServices using the built image tag
+      - name: Apply Knative Services (echo & echoTime)
+        run: |
+          # Replace __IMAGE__ in ksvc-echo.yaml with the actual image name
+          sed "s|__IMAGE__|${IMAGE_FULL}|g" ./openshift/ksvc-echo.yaml | oc apply -f -
+          sed "s|__IMAGE__|${IMAGE_FULL}|g" ./openshift/ksvc-echotime.yaml | oc apply -f -
+
+      - name: Set DEV Spring profile
+        run: |
+          kn service update hellospringboot-echo --env SPRING_PROFILES_ACTIVE=dev -n "${{ secrets.OPENSHIFT_PROJECT_NAME }}" 
+          kn service update hellospringboot-echotime --env SPRING_PROFILES_ACTIVE=dev -n "${{ secrets.OPENSHIFT_PROJECT_NAME }}" 
+
       # apply broker trigger
       - name: apply pingsource.yaml
         run: |
           oc apply -f ./openshift/broker.yaml
           oc apply -f ./openshift/pingsource.yaml
-          oc apply -f ./openshift/trigger.yaml
-
-      # Build & Deploy with func (buildpacks via Docker under the hood)
-      - name: func deploy
-        # If your function is not at repo root, set working-directory: ./hellojava (etc.)
-        run: |
-          kn func deploy \
-            --namespace "${{ secrets.OPENSHIFT_PROJECT_NAME }}" \
-            --image "${{ env.IMAGE_FULL }}" \
-            --confirm --verbose
-
-      - name: Set DEV Spring profile
-        run: |
-          kn service update hellospringboot --env SPRING_PROFILES_ACTIVE=dev -n "${{ secrets.OPENSHIFT_PROJECT_NAME }}" 
+          oc apply -f ./openshift/trigger-echo.yaml
+          oc apply -f ./openshift/trigger-echotime.yaml
 
       # Show the public URL
       - name: Show Knative Service URL
