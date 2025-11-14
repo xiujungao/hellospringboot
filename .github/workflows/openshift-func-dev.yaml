@@ -47,8 +47,7 @@ jobs:
         run: |
           kn func build \
             --image "${{ env.IMAGE_FULL }}" \
-            --confirm --verbose
-            --push
+            --confirm --verbose  --push
 
       # Apply KServices using the built image tag
       - name: Apply Knative Services (echo & echoTime)
