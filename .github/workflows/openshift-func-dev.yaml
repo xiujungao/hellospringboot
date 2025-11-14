@@ -46,7 +46,6 @@ jobs:
         # If your function is not at repo root, set working-directory: ./hellojava (etc.)
         run: |
           kn func build \
-            --namespace "${{ secrets.OPENSHIFT_PROJECT_NAME }}" \
             --image "${{ env.IMAGE_FULL }}" \
             --confirm --verbose
 
