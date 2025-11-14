@@ -45,9 +45,8 @@ jobs:
       - name: func build
         # If your function is not at repo root, set working-directory: ./hellojava (etc.)
         run: |
-          kn func build \
-            --image "${{ env.IMAGE_FULL }}" \
-            --confirm --verbose
+          docker build -t "${{ env.IMAGE_FULL }}" .
+          docker push "${{ env.IMAGE_FULL }}"
 
       # Apply KServices using the built image tag
       - name: Apply Knative Services (echo & echoTime)
